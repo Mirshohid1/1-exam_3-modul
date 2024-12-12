@@ -6,7 +6,11 @@ from datetime import date, datetime
 
 class Vehicle(models.Model):
     """
-    The model representing the vehicle.
+    This model represents a vehicle.
+    Attributes:
+        model (CharField): The model name of the vehicle, with a maximum length of 255 characters.
+        year (IntegerField): The year of manufacture of the vehicle, validated to be between 1700 and the current year.
+        vin (CharField): The Vehicle Identification Number (VIN), which is unique and 17 characters long.
     """
     
     model = models.CharField(
@@ -33,7 +37,11 @@ class Vehicle(models.Model):
 
 class Sensor(models.Model):
     """
-    This model represents the fields of the car sensor.
+    This model represents a sensor installed in a vehicle.
+    Attributes:
+        type (CharField): The type of the sensor, with a maximum length of 255 characters.
+        vehicle (ForeignKey): A reference to the associated vehicle, using a foreign key relationship.
+        installed_date (DateField): The date when the sensor was installed, validated to be between 1986 and the current year.
     """
 
     type = models.CharField(
@@ -56,3 +64,24 @@ class Sensor(models.Model):
 
     def __str__(self):
         return f"Sensor type: {self.type} for a vehicle: {self.vehicle.model}."
+
+class SensorReading(models.Model):
+    """
+    This model represents a reading from a sensor.
+    Attributes:
+        sensor (ForeignKey): A reference to the associated sensor, using a foreign key relationship.
+        value (FloatField): The value recorded by the sensor.
+        timestamp (DateTimeField): The date and time when the reading was recorded, validated to be between 1986 and the current year.
+    """
+
+    sensor = models.ForeignKey(Sensor, on_delete=models.CASCADE, related_name="readings")
+    value = models.FloatField()
+    timestamp = models.DateTimeField(
+        validators=[
+            MinValueValidator(datetime(1986, 1, 1, 12, 00, 00, 00)),
+            MaxValueValidator(datetime.today())
+        ]
+    )
+
+    def __str__(self):
+        return f"Sensor: {self.sensor.type}, Reading: {self.value}."
