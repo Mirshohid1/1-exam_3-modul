@@ -110,3 +110,28 @@ class MaintenanceSchedule(models.Model):
 
     def __str__(self):
         return f"Vehicle: {self.vehicle.model}, Service type: {self.service_type}, Scheduled date: {self.scheduled_date}."
+
+
+class ServiceCenter(models.Model):
+    """
+    This model represents a service center where vehicles can be maintained or repaired.
+    Attributes:
+        name (CharField): The name of the service center, with a maximum length of 255 characters and a minimum length of 3 characters.
+        address (CharField): The address of the service center, with a maximum length of 255 characters and a minimum length of 10 characters.
+        rating (DecimalField): The rating of the service center, on a scale from 0.0 to 5.0.
+    """
+
+    name = models.CharField(
+        max_length=255,
+        validators=[MinLengthValidator(3)],
+    )
+
+    address = models.CharField(
+        max_length=255,
+        validators=[MinLengthValidator(10)]
+    )
+
+    rating = models.DecimalField(max_digits=5, decimal_places=1)
+
+    def __str__(self):
+        return f"Service: {self.name}, Rating: {self.rating}."
