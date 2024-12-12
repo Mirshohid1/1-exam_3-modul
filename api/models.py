@@ -31,6 +31,13 @@ class Vehicle(models.Model):
         unique=True,
     )
 
+    def save(self, *args, **kwargs):
+        self.model = self.model.strip().title()
+        self.vin = self.vin.strip().upper()
+
+        super().save(*args, **kwargs)
+
+
     def __str__(self):
         return f"Model: {self.model}, Year: {self.year}."
 
@@ -61,6 +68,11 @@ class Sensor(models.Model):
             MaxValueValidator(date.today()),
         ]
     )
+
+    def save(self, *args, **kwargs):
+        self.type = self.type.strip().capitalize()
+
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"Sensor type: {self.type} for a vehicle: {self.vehicle.model}."
@@ -108,6 +120,11 @@ class MaintenanceSchedule(models.Model):
         validators=[MinValueValidator(date.today())],
     )
 
+    def save(self, *args, **kwargs):
+        self.service_type = self.service_type.strip().capitalize()
+
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return f"Vehicle: {self.vehicle.model}, Service type: {self.service_type}, Scheduled date: {self.scheduled_date}."
 
@@ -131,7 +148,20 @@ class ServiceCenter(models.Model):
         validators=[MinLengthValidator(10)]
     )
 
-    rating = models.DecimalField(max_digits=5, decimal_places=1)
+    rating = models.DecimalField(
+        max_digits=2,
+        decimal_places=1,
+        validators=[
+            MinValueValidator(0.0),
+            MaxValueValidator(5.0),
+        ]
+    )
+
+    def save(self, *args, **kwargs):
+        self.name = self.name.strip().title()
+        self.address = self.address.strip().capitalize()
+
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"Service: {self.name}, Rating: {self.rating}."
