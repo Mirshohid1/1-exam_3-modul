@@ -65,6 +65,7 @@ class Sensor(models.Model):
     def __str__(self):
         return f"Sensor type: {self.type} for a vehicle: {self.vehicle.model}."
 
+
 class SensorReading(models.Model):
     """
     This model represents a reading from a sensor.
@@ -85,3 +86,27 @@ class SensorReading(models.Model):
 
     def __str__(self):
         return f"Sensor: {self.sensor.type}, Reading: {self.value}."
+
+
+class MaintenanceSchedule(models.Model):
+    """
+    This model represents a maintenance schedule for a vehicle.
+    Attributes:
+        vehicle (ForeignKey): A reference to the associated vehicle, using a foreign key relationship.
+        service_type (CharField): The type of service scheduled, with a maximum length of 255 characters.
+        scheduled_date (DateField): The date when the service is scheduled, validated to be not in the past.
+    """
+
+    vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE, related_name="maintenance_schedules")
+
+    service_type = models.CharField(
+        max_length=255,
+        validators=[MinLengthValidator(3)],
+    )
+
+    scheduled_date = models.DateField(
+        validators=[MinValueValidator(date.today())],
+    )
+
+    def __str__(self):
+        return f"Vehicle: {self.vehicle.model}, Service type: {self.service_type}, Scheduled date: {self.scheduled_date}."
