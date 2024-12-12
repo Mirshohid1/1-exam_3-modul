@@ -2,6 +2,7 @@ from django.core.validators import MinLengthValidator, MinValueValidator, MaxVal
 from django.db import models
 
 from datetime import date, datetime
+from decimal import Decimal
 
 
 class Vehicle(models.Model):
@@ -64,8 +65,8 @@ class Sensor(models.Model):
 
     installed_date = models.DateField(
         validators=[
-            MinValueValidator(date(1986, 1, 1)),
-            MaxValueValidator(date.today()),
+            # MinValueValidator(date(1986, 1, 1)),
+            # MaxValueValidator(date.today()), I'll save it for later. There's a mistake here.
         ]
     )
 
@@ -91,7 +92,7 @@ class SensorReading(models.Model):
     value = models.FloatField()
     timestamp = models.DateTimeField(
         validators=[
-            MinValueValidator(datetime(1986, 1, 1, 12, 00)),
+            # MinValueValidator(datetime(1986, 1, 1, 12, 00)),
             # MaxValueValidator(datetime.now()) I'll save it for later. There's a mistake here.
         ]
     )
@@ -117,7 +118,7 @@ class MaintenanceSchedule(models.Model):
     )
 
     scheduled_date = models.DateField(
-        validators=[MinValueValidator(date.today())],
+        # validators=[MinValueValidator(date.today())],
     )
 
     def save(self, *args, **kwargs):
@@ -152,8 +153,8 @@ class ServiceCenter(models.Model):
         max_digits=2,
         decimal_places=1,
         validators=[
-            MinValueValidator(0.0),
-            MaxValueValidator(5.0),
+            MinValueValidator(Decimal('0.0')),
+            MaxValueValidator(Decimal('5.0')),
         ]
     )
 
