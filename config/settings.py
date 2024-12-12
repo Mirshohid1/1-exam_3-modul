@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # Django built-in apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,10 +41,23 @@ INSTALLED_APPS = [
 
     # third-party apps
     'rest_framework',
+    'drf_spectacular',
 
     # local apps
     'api',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'AutoTech - Avtomobil Diagnostika va Boshqaruv Tizimi API',
+    'DESCRIPTION': 'Zamonaviy avtomobil diagnostikasi va boshqaruv tizimi uchun API',
+    'VERSION': '1.0.0',
+    'SERVERS': [{'url': 'http://localhost/api/v1/'}],
+    'COMPONENT_SPLIT_REQUEST': True,
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
